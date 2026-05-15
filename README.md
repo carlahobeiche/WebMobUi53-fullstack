@@ -75,3 +75,29 @@ Pour développer et tester le mini-projet en local, voici les étapes à suivre 
     ```
 
 L'application sera accessible à l'adresse <http://127.0.0.1:8000>.
+
+## Système de sondage
+
+Cette application intègre un système de sondage complet développé avec Laravel et Vue.js.
+
+### Fonctionnalités
+
+- Créer, modifier et supprimer des sondages depuis un dashboard
+- Lancer un sondage (brouillon → actif)
+- Configurer les options : choix unique ou multiple, résultats publics, durée
+- Partager un sondage via un lien unique contenant un token
+- Voter sur un sondage (une seule fois par utilisateur)
+- Voir les résultats en direct via polling toutes les 5 secondes
+- Graphique en barres des résultats
+- Accès aux résultats conditionnel (publics ou créateur uniquement)
+
+### Pages
+
+- `/polls/dashboard` — dashboard de gestion des sondages (authentification requise)
+- `/polls/{token}` — page de vote et de résultats (accessible sans connexion si résultats publics)
+
+### Architecture frontend
+
+Deux applications Vue.js distinctes :
+- `poll-dashboard.js` — gestion des sondages (création, édition, suppression)
+- `poll-vote.js` — vote et affichage des résultats en direct
