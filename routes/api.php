@@ -16,11 +16,17 @@ Route::apiResource('v1/posts', ApiPostController::class)
     ->middlewareFor(['update'], ['auth:sanctum', 'abilities:posts:update'])
     ->middlewareFor(['destroy'], ['auth:sanctum', 'abilities:posts:delete']);
 
+// Accessible sans connexion : pour voir un sondage via son lien de partage
 Route::get('/v1/polls/{token}', [ApiPollController::class, 'show']);
 
+// Routes qui nécessitent d'être connecté
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/v1/foo', [ApiFooController::class, 'show']);
     Route::post('/v1/foo', [ApiFooController::class, 'store']);
-    Route::get('/v1/polls', [ApiPollController::class, 'index']);
-    Route::delete('/v1/polls/{id}', [ApiPollController::class, 'remove']);
+
+    Route::get('/v1/polls', [ApiPollController::class, 'index']);        // lister ses sondages
+    Route::post('/v1/polls', [ApiPollController::class, 'store']);       // créer un sondage
+    Route::put('/v1/polls/{id}', [ApiPollController::class, 'update']);  // modifier un sondage
+    Route::delete('/v1/polls/{id}', [ApiPollController::class, 'remove']); // supprimer un sondage
+    Route::post('/v1/polls/{token}/vote', [ApiPollController::class, 'vote']); // voter
 });

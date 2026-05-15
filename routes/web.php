@@ -31,6 +31,11 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/auth/login', 'login');
 });
 
+// Page de vote d'un sondage, accessible sans connexion
+Route::get('/polls/{token}', function (string $token) {
+    return view('polls.show', ['token' => $token]);
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/polls/dashboard', PollDashboardController::class)->name('polls.dashboard');
     Route::resource('posts', PostController::class)->except(['index', 'show']);

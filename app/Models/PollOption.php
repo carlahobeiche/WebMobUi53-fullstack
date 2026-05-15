@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PollOption extends Model
 {
+
+// Laravel bloque par défaut l'écriture automatique en base de données.
+// On déclare 'label' comme autorisé pour pouvoir créer des options avec ->create(['label' => '...'])
+protected $fillable = ['label'];
+    
+
     /**
      * Get the poll that owns the option.
      */
@@ -24,3 +30,5 @@ class PollOption extends Model
         return $this->hasMany(PollVote::class);
     }
 }
+
+//C'est quoi ? Un modèle = la représentation d'une table en base de données. Ce fichier représente les options d'un sondage ("Option A", "Option B"...)
