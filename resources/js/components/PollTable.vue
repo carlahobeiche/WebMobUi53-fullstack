@@ -1,50 +1,75 @@
 <script setup>
-  import { usePollStore } from '@/stores/usePollStore';
+import { usePollStore } from '@/stores/usePollStore';
 
-  const { polls, deletePoll } = usePollStore();
+const { polls, deletePoll } = usePollStore();
 
-  async function delPoll(id) {
-    console.log('delete Poll ID:', id);
-    await deletePoll(id);
-  }
+const emit = defineEmits(['edit']); // dit au parent quel sondage on veut modifier
+
+// Copie le lien de partage dans le presse-papier
+function copyLink(token) {
+    const url = window.location.origin + '/polls/' + token;
+    navigator.clipboard.writeText(url);
+    alert('Lien copié !');
+}
 </script>
 
 <template>
-  <p v-if="polls.length === 0">Aucun sondage.</p>
+    <p v-if="polls.length === 0" class="text-gray-500 dark:text-gray-400">
+        Aucun sondage.
+    </p>
 
-  <table v-else class="w-full border-collapse text-left">
-    <thead>
-      <tr>
-        <th class="border px-3 py-2">Actions</th>
-        <th class="border px-3 py-2">ID</th>
-        <th class="border px-3 py-2">Titre</th>
-        <th class="border px-3 py-2">Question</th>
-        <th class="border px-3 py-2">Brouillon</th>
-        <th class="border px-3 py-2">Debut</th>
-        <th class="border px-3 py-2">Fin</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="poll in polls" :key="poll.id">
-        <td class="border px-3 py-2"><button @click="delPoll(poll.id)">Supp.</button></td>
-        <td class="border px-3 py-2">{{ poll.id }}</td>
-        <td class="border px-3 py-2">{{ poll.title || '-' }}</td>
-        <td class="border px-3 py-2">{{ poll.question }}</td>
-        <td class="border px-3 py-2">{{ poll.is_draft ? 'Oui' : 'Non' }}</td>
-        <td class="border px-3 py-2">{{ poll.started_at || '-' }}</td>
-        <td class="border px-3 py-2">{{ poll.ends_at || '-' }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <div v-else class="space-y-3">
+        <div
+            v-for="poll in polls"
+            :key="poll.id"
+            class="bg-white dark:bg-slate-800 rounded-lg shadow p-4"
+        >
+            <!-- Titre et question -->
+            <div class="mb-2">
+                <p class="font-semibold dark:text-white">
+                    {{ poll.title || poll.question }}
+                </p>
+                <p v-if="poll.title" class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ poll.question }}
+                </p>
+            </div>
+
+            <!-- Statut du sondage -->
+            <p class="text-xs mb-3">
+                <span :class="poll.is_draft ? 'text-yellow-500' : 'text-green-500'">
+                    {{ poll.is_draft ? 'Brouillon' : 'Lancé' }}
+                </span>
+                <span v-if="poll.ends_at" class="text-gray-400 ml-2">
+                    · Fin : {{ new Date(poll.ends_at).toLocaleString() }}
+                </span>
+            </p>
+
+            <!-- Actions -->
+            <div class="flex gap-2 flex-wrap">
+                <!-- Modifier -->
+                <button
+                    @click="emit('edit', poll)"
+                    class="px-3 py-1 text-sm bg-gray-200 dark:bg-slate-700 dark:text-white rounded hover:bg-gray-300"
+                >
+                    Modifier
+                </button>
+
+                <!-- Copier le lien de partage -->
+                <button
+                    @click="copyLink(poll.secret_token)"
+                    class="px-3 py-1 text-sm bg-teal-600 text-white rounded hover:bg-teal-700"
+                >
+                    Copier le lien
+                </button>
+
+                <!-- Supprimer -->
+                <button
+                    @click="deletePoll(poll.id)"
+                    class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+                >
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
-
-<style scoped>
-  button {
-    background-color: #e3342f;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-  }
-</style>

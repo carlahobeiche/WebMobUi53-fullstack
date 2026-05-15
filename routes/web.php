@@ -31,16 +31,18 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/auth/login', 'login');
 });
 
-// Page de vote d'un sondage, accessible sans connexion
-Route::get('/polls/{token}', function (string $token) {
-    return view('polls.show', ['token' => $token]);
-});
-
 Route::middleware('auth')->group(function () {
+    // Dashboard AVANT /polls/{token} pour que "dashboard" ne soit pas interprété comme un token
     Route::get('/polls/dashboard', PollDashboardController::class)->name('polls.dashboard');
     Route::resource('posts', PostController::class)->except(['index', 'show']);
     Route::singleton('my-profile', MyProfileController::class)->destroyable();
     Route::match(['put', 'patch'], '/likes/{post}', [LikeController::class, 'update']);
     Route::resource('tokens', TokenController::class)->only(['index', 'create', 'store', 'destroy']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+});
+
+// Page de vote d'un sondage, accessible sans connexion
+// Doit être APRÈS le groupe auth pour ne pas intercepter /polls/dashboard
+Route::get('/polls/{token}', function (string $token) {
+    return view('polls.show', ['token' => $token]);
 });
