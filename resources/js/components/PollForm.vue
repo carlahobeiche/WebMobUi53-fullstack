@@ -19,7 +19,6 @@ const question = ref(props.poll?.question ?? '');
 const options  = ref(props.poll?.options?.map(o => o.label) ?? ['', '']); // minimum 2 options
 const isDraft               = ref(props.poll?.is_draft ?? true);
 const allowMultipleChoices  = ref(props.poll?.allow_multiple_choices ?? false);
-const allowVoteChange       = ref(props.poll?.allow_vote_change ?? false);
 const resultsPublic         = ref(props.poll?.results_public ?? false);
 const duration              = ref(props.poll?.duration ?? null);
 
@@ -50,7 +49,6 @@ async function submit() {
         options:                 options.value,
         is_draft:                isDraft.value,
         allow_multiple_choices:  allowMultipleChoices.value,
-        allow_vote_change:       allowVoteChange.value,
         results_public:          resultsPublic.value,
         duration:                duration.value ? parseInt(duration.value) : null,
     };
@@ -153,10 +151,6 @@ async function submit() {
             <label class="flex items-center gap-2 dark:text-gray-300">
                 <input type="checkbox" v-model="resultsPublic" />
                 Résultats publics
-            </label>
-            <label class="flex items-center gap-2 dark:text-gray-300">
-                <input type="checkbox" v-model="allowVoteChange" />
-                Autoriser le changement de vote
             </label>
         </div>
 
