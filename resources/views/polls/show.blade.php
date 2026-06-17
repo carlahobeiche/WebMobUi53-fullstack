@@ -8,5 +8,5 @@
 
     {{-- Le div que Vue va cibler pour monter l'app.
          data-token contient le token du sondage, Vue va le lire pour appeler l'API --}}
-    <div id="app-vote" data-token="{{ $token }}"></div>
+    <div id="app-vote" data-token="{{ $token }}"></div>{{-- crée un div vide, et écris le token dedans en attribut HTML --}} 
 </x-vue-app-layout>

@@ -23,9 +23,9 @@ class ApiPollController extends Controller
     }
 
     // Crée un nouveau sondage avec ses options
-    public function store(Request $request)
-    {
-        // On valide les données envoyées par le frontend
+    public function store(Request $request) // quand on utilise store on s'assure que ces 3 critères sont présents 
+    {// on a ajouté store parce que sinon quand l'utilisateur appuie sur créer les données ne peuvent pas être envoyées correctement 
+        // 1. On valide les données envoyées par le frontend
         $validated = $request->validate([
             'title'                  => 'nullable|string|max:255',
             'question'               => 'required|string|max:255',
@@ -43,14 +43,14 @@ class ApiPollController extends Controller
         $poll->user_id                = $request->user()->id;
         $poll->title                  = $validated['title'] ?? null;
         $poll->question               = $validated['question'];
-        $poll->secret_token           = Str::random(32); // token aléatoire unique pour le lien de partage
+        $poll->secret_token           = Str::random(32); // 2. token aléatoire unique pour le lien de partage
         $poll->is_draft               = $validated['is_draft'] ?? true;
         $poll->allow_multiple_choices = $validated['allow_multiple_choices'] ?? false;
         $poll->allow_vote_change      = $validated['allow_vote_change'] ?? false;
         $poll->results_public         = $validated['results_public'] ?? false;
         $poll->duration               = $validated['duration'] ?? null;
 
-        // Si le sondage est lancé directement (pas en brouillon), on note l'heure de début et de fin
+        // 3. Si le sondage est lancé directement (pas en brouillon), on note l'heure de début et de fin
         if (!$poll->is_draft) {
             $poll->started_at = now();
             if ($poll->duration) {
@@ -83,7 +83,7 @@ class ApiPollController extends Controller
         $isOwner     = $user && $user->id === $poll->user_id;
 
         // Les résultats (nombre de votes) ne sont visibles que si c'est public ou si c'est le créateur
-        $showResults = $poll->results_public || $isOwner;
+        $showResults = $poll->results_public || $isOwner; //soit c'est public, soit c'est le créateur qui regarde, sinon les votes restent cachés (null).
 
         $options = $poll->options->map(fn($option) => [
             'id'          => $option->id,
@@ -138,9 +138,12 @@ class ApiPollController extends Controller
             'results_public'         => 'boolean',
             'duration'               => 'nullable|integer|min:1',
         ]);
-
-        $wasDraft   = $poll->is_draft;
-        $isNowDraft = $validated['is_draft'] ?? $poll->is_draft;
+        // l'état AVANT la modification
+        $wasDraft   = $poll->is_draft; //On garde la valeur avant modification.
+        
+        //l'état APRÈS la modification (ce que l'utilisateur vient d'envoyer)
+        $isNowDraft = $validated['is_draft'] ?? $poll->is_draft;//Ça regarde ce que l'utilisateur a envoyé dans le formulaire. 
+        // Si le formulaire envoie is_draft:false (il a décoché Brouillon), alors $isNowDraft vaut false.
 
         $poll->title                  = $validated['title'] ?? null;
         $poll->question               = $validated['question'];
