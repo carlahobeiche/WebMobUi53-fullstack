@@ -18,7 +18,7 @@ const message = ref(null);
 // Est-ce qu'on est en train d'envoyer le vote ?
 const isSubmitting = ref(false);
 // URL de partage du sondage, construite à partir de l'URL actuelle
-const shareUrl = window.location.href;
+const shareUrl = window.location.href;//on le calcule pas avec un computed psq window.location.href ne changera jamais pendant qu'on est sur la page l'url est fixe
 
 // Charge le sondage depuis l'API via son token
 async function loadPoll() {
@@ -42,7 +42,7 @@ const hasVoted = computed(() => {
 });
 
 // Peut-on encore voter ?
-const canVote = computed(() => {
+const canVote = computed(() => {//canVote est computed pour que le résultat soit en cache 
     if (!poll.value) return false;
     if (poll.value.is_draft) return false;
     if (isEnded.value) return false;
@@ -103,7 +103,7 @@ const pollingInterval = setInterval(() => {
 }, 5000);
 
 // Arrête le polling quand on quitte la page
-onUnmounted(() => clearInterval(pollingInterval));
+onUnmounted(() => clearInterval(pollingInterval));//si on enlève ca, l'interval continue de tourner après que l'utilisateur ait quitté la page
 
 // Chargement initial
 loadPoll();
@@ -187,7 +187,8 @@ loadPoll();
                 </p>
 
                 <!-- Résultats (visibles si publics ou si créateur) -->
-                <div v-if="poll.options[0]?.votes_count !== null" class="mt-6">
+                <div v-if="poll.options[0]?.votes_count !== null" class="mt-6"> 
+                     <!-- l'api retourne votes_count : null quand les résultats sont privés et que l'util n'est pas le créateur -->
                     <h2 class="text-lg font-semibold dark:text-white mb-3">Résultats</h2>
 
                     <div class="space-y-2">

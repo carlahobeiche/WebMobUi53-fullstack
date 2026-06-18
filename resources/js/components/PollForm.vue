@@ -12,9 +12,10 @@ const emit = defineEmits(['done']); // événement pour dire au parent qu'on a f
 const { createPoll, updatePoll } = usePollStore();
 
 const isEditMode = !!props.poll; // true si on modifie, false si on crée
+//!! va convertir une valeur en booléen
 
 // Les champs du formulaire, pré-remplis si on est en mode édition
-const title    = ref(props.poll?.title ?? '');
+const title    = ref(props.poll?.title ?? ''); //?. c'est l'opérateur d'accès optionnel donc ca évite l'erreur si jamais props.poll est null
 const question = ref(props.poll?.question ?? '');
 const options  = ref(props.poll?.options?.map(o => o.label) ?? ['', '']); // minimum 2 options
 const isDraft               = ref(props.poll?.is_draft ?? true);
@@ -44,7 +45,7 @@ async function submit() {
 
     // Les données qu'on envoie à l'API
     const data = {
-        title:                   title.value || null,
+        title:                   title.value || null,//si l'utilisateur laisse le champ vide ca va valoir champ vide donc retourne null
         question:                question.value,
         options:                 options.value,
         is_draft:                isDraft.value,
