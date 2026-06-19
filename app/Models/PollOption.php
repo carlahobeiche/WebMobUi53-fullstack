@@ -12,8 +12,8 @@ class PollOption extends Model
 // Laravel bloque par défaut l'écriture automatique en base de données.
 // On déclare 'label' comme autorisé pour pouvoir créer des options avec ->create(['label' => '...'])
 protected $fillable = ['label'];
+//donc wn gros c'est pour dire à Laravel que le champ label est autorisé à être rempli avec create()
     
-
     /**
      * Get the poll that owns the option.
      */

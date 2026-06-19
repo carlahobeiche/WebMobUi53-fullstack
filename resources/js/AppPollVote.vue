@@ -9,16 +9,14 @@ const props = defineProps({
 
 const { fetchApi } = useFetchApi();
 
-// Les données du sondage chargées depuis l'API
-const poll = ref(null);
-// Les options cochées par l'utilisateur avant de voter
-const selectedOptionIds = ref([]);
-// Message d'erreur ou de succès à afficher
-const message = ref(null);
-// Est-ce qu'on est en train d'envoyer le vote ?
-const isSubmitting = ref(false);
+const poll = ref(null);// Les données du sondage chargées depuis l'API
+const selectedOptionIds = ref([]);// Les options cochées par l'utilisateur avant de voter
+const message = ref(null);// Message d'erreur ou de succès à afficher
+const isSubmitting = ref(false);// Est-ce qu'on est en train d'envoyer le vote ?
+
 // URL de partage du sondage, construite à partir de l'URL actuelle
 const shareUrl = window.location.href;//on le calcule pas avec un computed psq window.location.href ne changera jamais pendant qu'on est sur la page l'url est fixe
+//pas un ref c une constante
 
 // Charge le sondage depuis l'API via son token
 async function loadPoll() {
@@ -32,7 +30,7 @@ async function loadPoll() {
 
 // Le sondage est-il terminé ? (date de fin dépassée)
 const isEnded = computed(() => {
-    if (!poll.value?.ends_at) return false;
+    if (!poll.value?.ends_at) return false;//si poll n'est pas encore chargé (null) OU si le sondage n'a pas de date de fin (ends_at est null), on retourne false
     return new Date(poll.value.ends_at) < new Date();
 });
 
@@ -48,20 +46,22 @@ const canVote = computed(() => {//canVote est computed pour que le résultat soi
     if (isEnded.value) return false;
     if (hasVoted.value) return false;
     return true;
-});
+});//canVote utilise d'autres computed
+
 
 // Gère la sélection d'une option
 function toggleOption(optionId) {
     if (!poll.value.allow_multiple_choices) {
-        // Choix unique : on remplace la sélection
+        // si choix unique : on remplace entièrement selectedOptionIds par un tableau ne contenant que cette seule option qu'on vient de cliquer
         selectedOptionIds.value = [optionId];
     } else {
         // Choix multiple : on ajoute ou retire l'option
+        // on vérifie si l'option est déjà dans le tableau
         const index = selectedOptionIds.value.indexOf(optionId);
         if (index === -1) {
-            selectedOptionIds.value.push(optionId);
+            selectedOptionIds.value.push(optionId);//Si absente, on l'ajoute (push)
         } else {
-            selectedOptionIds.value.splice(index, 1);
+            selectedOptionIds.value.splice(index, 1);//Si déjà présente, on la retire (splice)
         }
     }
 }
@@ -70,13 +70,13 @@ function toggleOption(optionId) {
 async function submitVote() {
     if (selectedOptionIds.value.length === 0) {
         message.value = { type: 'error', text: 'Sélectionne au moins une option.' };
-        return;
+        return;//Avant même d'appeler l'API, on vérifie côté frontend que l'utilisateur a coché au moins une option
     }
 
     isSubmitting.value = true;
     message.value = null;
 
-    try {
+    try {//Appel API
         await fetchApi({
             url: `/polls/${props.token}/vote`,
             method: 'POST',
@@ -99,6 +99,7 @@ const totalVotes = computed(() => {
 
 // Polling : recharge les résultats toutes les 5 secondes
 const pollingInterval = setInterval(() => {
+//pollingInterval stocke un identifiant numérique unique pour CET interval précis
     if (poll.value) loadPoll();
 }, 5000);
 

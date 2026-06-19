@@ -11,11 +11,12 @@ const props = defineProps({
 const { setPolls } = usePollStore();
 setPolls(props.polls); // charge la liste initiale des sondages
 
-// Vue actuelle : 'list', 'create' ou 'edit'
 const currentView = ref('list');
+//currentView est notre variable réactive qui détermine ce qui s'affiche : 'list', 'create', ou 'edit'
 
-// Le sondage en cours d'édition (null si on est en mode création)
 const pollToEdit = ref(null);
+// Le sondage en cours d'édition (null si on est en mode création)
+
 
 // Ouvre le formulaire de création
 function showCreate() {
@@ -27,7 +28,9 @@ function showCreate() {
 function showEdit(poll) {
     pollToEdit.value = poll;
     currentView.value = 'edit';
-}
+}//Cette fonction reçoit un poll en paramètre — c'est exactement la donnée envoyée par PollTable via emit('edit', poll)
+
+
 
 // Retourne à la liste après création/édition/annulation
 function showList() {
@@ -55,7 +58,7 @@ function showList() {
 
                 <!-- Bouton retour, visible sur le formulaire -->
                 <button
-                    v-else
+                    v-else 
                     @click="showList"
                     class="px-4 py-2 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300"
                 >

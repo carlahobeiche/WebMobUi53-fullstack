@@ -21,6 +21,7 @@ Route::get('/v1/polls/{token}', [ApiPollController::class, 'show']);
 
 // Routes qui nécessitent d'être connecté
 Route::middleware('auth:sanctum')->group(function () {
+//Au lieu d'écrire ->middleware('auth:sanctum') sur chacune des 5 routes séparément, on les regroupe toutes dans un group() = le middleware s'applique à tous
     Route::get('/v1/foo', [ApiFooController::class, 'show']);
     Route::post('/v1/foo', [ApiFooController::class, 'store']);
 

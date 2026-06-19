@@ -28,13 +28,14 @@ const isLoading  = ref(false);
 
 // Ajoute une option vide à la liste
 function addOption() {
-    options.value.push('');
+    options.value.push('');//push('') ajoute un champ vide à la fin
 }
 
 // Supprime une option à l'index donné (minimum 2 options)
 function removeOption(index) {
-    if (options.value.length > 2) {
+    if (options.value.length > 2) {//empêche de descendre sous 2 options
         options.value.splice(index, 1);
+        //splice(index, 1) retire 1 élément à la position index
     }
 }
 
@@ -52,6 +53,7 @@ async function submit() {
         allow_multiple_choices:  allowMultipleChoices.value,
         results_public:          resultsPublic.value,
         duration:                duration.value ? parseInt(duration.value) : null,
+        //si l'utilisateur a tapé une durée, on la convertit en nombre entier
     };
 
     try {

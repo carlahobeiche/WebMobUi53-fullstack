@@ -2,13 +2,16 @@
 import { usePollStore } from '@/stores/usePollStore';
 
 const { polls, deletePoll } = usePollStore();
+//On récupère polls et deletePoll directement depuis le store
 
 const emit = defineEmits(['edit']); // dit au parent quel sondage on veut modifier
 
 // Copie le lien de partage dans le presse-papier
 function copyLink(token) {
     const url = window.location.origin + '/polls/' + token;
+    //window.location.origin retourne la base de l'URL actuelle
     navigator.clipboard.writeText(url);
+    //navigator.clipboard.writeText() est une API du navigateur qui copie du texte dans le presse-papier
     alert('Lien copié !');
 }
 </script>

@@ -14,16 +14,18 @@ export function usePollStore() {
 
     // Crée un sondage et l'ajoute en tête de liste
     async function createPoll(data) {
-        const newPoll = await fetchApi({ url: 'polls', method: 'POST', data });
+        const newPoll = await fetchApi({ url: 'polls', method: 'POST', data });//envoie une requête POST vers /api/v1/polls avec les données du formulaire
         polls.value.unshift(newPoll); // unshift = ajoute au début du tableau
-        return newPoll;
+        return newPoll;//contient le sondage tout juste créé
     }
 
     // Modifie un sondage et met à jour la liste
     async function updatePoll(id, data) {
         const updated = await fetchApi({ url: `polls/${id}`, method: 'PUT', data });
         const index = polls.value.findIndex(p => p.id === id);//findIndex pour trouver directement la position du sondage modifié
-        if (index !== -1) polls.value[index] = updated; // remplace le sondage dans la liste
+        if (index !== -1) polls.value[index] = updated;
+        //if (index !== -1) vérifie qu'on a bien trouvé le sondage avant de continuer
+        //polls.value[index] = updated remplace l'ancien sondage par la version mise à jour, à la même position dans le tableau
         return updated;
     }
 

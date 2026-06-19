@@ -45,4 +45,4 @@ Route::middleware('auth')->group(function () {
 // Doit être APRÈS le groupe auth pour ne pas intercepter /polls/dashboard
 Route::get('/polls/{token}', function (string $token) {
     return view('polls.show', ['token' => $token]);
-});
+});//cette route fait une seule chose : prendre le token de l'URL et le transmettre à la vue
