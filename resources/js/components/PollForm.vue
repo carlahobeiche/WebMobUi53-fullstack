@@ -60,9 +60,10 @@ async function submit() {
         if (isEditMode) {
             await updatePoll(props.poll.id, data);
         } else {
-            await createPoll(data);
+            await createPoll(data);//mis en pause pendant la création d'un sondage
         }
-        emit('done'); // dit au parent qu'on a fini, il peut fermer le formulaire
+        emit('done'); // dit au parent qu'on a fini, il peut fermer le formulaire ( le parent c'est apppolldashboard )
+        //cette ligne s'exécute après que le await est réglé
     } catch (err) {
         error.value = err.data?.message ?? 'Une erreur est survenue.';
     } finally {
