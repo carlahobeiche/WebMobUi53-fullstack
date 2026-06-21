@@ -4,7 +4,7 @@ import { usePollStore } from '@/stores/usePollStore';
 const { polls, deletePoll } = usePollStore();
 //On récupère polls et deletePoll directement depuis le store
 
-const emit = defineEmits(['edit']); // dit au parent quel sondage on veut modifier
+const emit = defineEmits(['edit']); // dit au parent que le sondage veut être modifié
 //defineEmits créé la fonction emit  
 //defineEmits(['edit']) = c'est la liste des changements que cet enfant a reçu
 
@@ -58,7 +58,7 @@ function copyLink(token) {
                 >
                     Modifier
                 </button>
-                <!-- "emit('edit', poll)" = enfant envoie alerte au parent pour signaler une modif -->
+                <!-- "emit('edit', poll)" = enfant envoie alerte au parent pour signaler l'envie de modif -->
 
                 <!-- Copier le lien de partage -->
                 <button
