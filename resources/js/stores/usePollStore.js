@@ -13,6 +13,7 @@ export function usePollStore() {
     }
 
     // Crée un sondage et l'ajoute en tête de liste
+   // Crée un sondage et l'ajoute en tête de liste
     async function createPoll(data) {
         const newPoll = await fetchApi({ url: 'polls', method: 'POST', data });//envoie une requête POST vers /api/v1/polls avec les données du formulaire
         //await mis en pause  pour faire le reste de la création de sondage

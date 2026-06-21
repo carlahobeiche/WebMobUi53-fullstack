@@ -59,7 +59,7 @@ export function useFetchApi(baseUrl = null, additionalHeaders = {}) {
     method = method != null ? method.toUpperCase() : data != null ? 'POST' : 'GET';
 
     return new Promise((resolve, reject) => {
-      const controller = new AbortController();
+      const controller = new AbortController();// outil qui permet d'annuler une requête en cours
       const timer = setTimeout(() => controller.abort(), timeout);
 
       fetch(fullUrl, {

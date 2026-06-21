@@ -135,7 +135,7 @@ class ApiPollController extends Controller
             ->firstOrFail();//lève auto une erreur 404 si les 2 where ont pas de résultats
 
         $validated = $request->validate([
-            'title'                  => 'nullable|string|max:255',
+            'title'                  => 'nullable|string|max:255',//nullable
             'question'               => 'required|string|max:255',
             'options'                => 'sometimes|array|min:2',
             'options.*'              => 'required|string|max:255',
