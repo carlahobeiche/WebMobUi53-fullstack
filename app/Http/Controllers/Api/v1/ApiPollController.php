@@ -77,7 +77,8 @@ class ApiPollController extends Controller
     public function show(Request $request, string $token)
     {
         //là on commence par trouver le sondage par token
-        $poll = Poll::with(['options' => fn($q) => $q->withCount('votes')])//Poll:: cv dire on part direct de la classee
+        $poll = Poll::with(['options' => fn($q) => $q->withCount('votes')])//Poll:: cv dire on part direct de la classe
+        //`fn($q) => $q->withCount('votes')` veut dire :"pendant que tu charges les options, compte aussi les votes de chacune et attache ce nombre
             ->where('secret_token', $token)//filtre sur le token reçu dans l'url
             ->first();//va prendre le premier résultat
 
@@ -85,7 +86,7 @@ class ApiPollController extends Controller
             return response()->json(['message' => 'Sondage introuvable.'], 404);
         }
 
-        $user        = $request->user();//retourne null si personne n'est connect
+        $user        = $request->user();//retourne null si personne n'est connecté
         $isOwner     = $user && $user->id === $poll->user_id;
         // Les résultats (nombre de votes) ne sont visibles que si c'est public ou si c'est le créateur
         $showResults = $poll->results_public || $isOwner; //soit c'est public, soit c'est le créateur qui regarde, sinon les votes restent cachés (null).
@@ -178,9 +179,9 @@ class ApiPollController extends Controller
             foreach ($validated['options'] as $label) {
                 $poll->options()->create(['label' => $label]);
             }
-        }
+        }//si sondage deja lancé ( if ($wasDraft && isset($validated['options']))) devient fausse donc le bloc entier saute silencieusement  
 
-        return $poll->load('options');
+        return $poll->load('options');//on passe directement à là si la condition est fausse
     }
 
     // Enregistre le vote d'un utilisateur sur un sondage

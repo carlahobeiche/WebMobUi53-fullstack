@@ -27,8 +27,8 @@ function showCreate() {
 // Ouvre le formulaire d'édition avec le sondage sélectionné
 function showEdit(poll) {
     pollToEdit.value = poll;
-    currentView.value = 'edit';
-}//Cette fonction reçoit un poll en paramètre — c'est exactement la donnée envoyée par PollTable via emit('edit', poll)
+    currentView.value = 'edit';//Cette fonction reçoit un poll,c'est exactement la donnée envoyée par PollTable via emit('edit', poll)
+}
 
 
 
